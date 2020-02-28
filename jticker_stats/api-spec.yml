@@ -1,0 +1,116 @@
+openapi: 3.0.2
+info:
+  title: Jticker stats
+  description: |
+    Jticker stats service provides up to date compute-heavy time series statistic
+  version: 2.3.0
+paths:
+  /stats:
+    get:
+      summary: Get stats structure
+      responses:
+        200:
+          description: Stats
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - trading_pair
+                    - first
+                    - last
+                  properties:
+                    trading_pair:
+                      $ref: "#/definitions/schemas/raw_trading_pair"
+                    first:
+                      $ref: "#/definitions/schemas/candle"
+                    last:
+                      $ref: "#/definitions/schemas/candle"
+        503:
+          description: Stats data is not ready
+  /healthcheck:
+    get:
+      summary: Stats service healthcheck
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - healthy
+                  - version
+                properties:
+                  healthy:
+                    type: boolean
+                  version:
+                    type: string
+                    example: 2.2.1
+        503:
+          description: Stats service is not ready
+definitions:
+  schemas:
+    raw_trading_pair:
+      type: object
+      required:
+        - exchange
+        - symbol
+        - topic
+      properties:
+        exchange:
+          type: string
+          example: bitfinex
+        symbol:
+          type: string
+          example: BTCUSD
+        topic:
+          type: string
+          example: bitfinex_BTCUSD_60
+    candle:
+      type: object
+      required:
+        - exchange
+        - symbol
+        - timestamp
+        - open
+        - high
+        - low
+        - close
+      properties:
+        exchange:
+          type: string
+          example: bitfinex
+        symbol:
+          type: string
+          example: BTCUSD
+        interval:
+          type: number
+          example: 60
+        timestamp:
+          type: number
+          example: 1582907299
+        open:
+          type: number
+          example: 123
+        high:
+          type: number
+          example: 321
+        low:
+          type: number
+          example: 66
+        close:
+          type: number
+          example: 298
+        base_volume:
+          type: number
+          nullable: true
+          example: 123.68
+        quote_volume:
+          type: number
+          nullable: true
+          example: 24458.46
+        time_iso8601:
+          type: string
+          example: '2020-02-28T16:28:19+00:00'
