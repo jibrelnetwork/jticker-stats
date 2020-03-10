@@ -2,6 +2,7 @@ import json
 import time
 from dataclasses import dataclass
 from importlib import resources
+from pathlib import Path
 from typing import Dict, List, Optional
 
 import backoff
@@ -40,7 +41,11 @@ class StatsService(Service):
         self._stack_size = int(self.config.time_series_stacked_requests_size)
         self._stack_interval = float(self.config.time_series_stacked_requests_interval)
         self._update_interval = float(self.config.time_series_update_interval)
-        self._cache_path = self.config.stats_cache_file
+        self._cache_path: Optional[Path]
+        if self.config.stats_cache_file:
+            self._cache_path = Path(self.config.stats_cache_file)
+        else:
+            self._cache_path = None
 
     def _configure_router(self):
         r = self.web_server.app.router
