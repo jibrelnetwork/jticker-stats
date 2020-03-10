@@ -41,6 +41,7 @@ class StatsService(Service):
         self._stack_size = int(self.config.time_series_stacked_requests_size)
         self._stack_interval = float(self.config.time_series_stacked_requests_interval)
         self._update_interval = float(self.config.time_series_update_interval)
+        self._cache_path: Optional[Path]
         if self.config.stats_cache_file:
             self._cache_path = Path(self.config.stats_cache_file)
         else:
